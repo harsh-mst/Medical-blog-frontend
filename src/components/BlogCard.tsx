@@ -36,9 +36,9 @@ function avatarHue(str: string) {
   return h % 360;
 }
 
-interface Props { blog: BlogPost; onClick: () => void; }
+interface Props { blog: BlogPost; onClick: () => void; onDelete?: (blogId: string) => void; }
 
-export function BlogCard({ blog, onClick }: Props) {
+export function BlogCard({ blog, onClick, onDelete }: Props) {
   const preview = blog.content
     .replace(/#+\s+[^\n]*/g, '')
     .replace(/\*+([^*]+)\*+/g, '$1')
@@ -54,6 +54,11 @@ export function BlogCard({ blog, onClick }: Props) {
   const specColor = getSpecColor(blog.specialization);
   const hue = avatarHue(blog.specialization + blog.generatedAt);
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) onDelete(blog.blogId);
+  };
+
   return (
     <article
       onClick={onClick}
@@ -61,6 +66,7 @@ export function BlogCard({ blog, onClick }: Props) {
       role="button"
       onKeyDown={e => e.key === 'Enter' && onClick()}
       aria-label={`Read article: ${blog.title}`}
+      data-blog-id={blog.blogId}
       style={{
         background: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
@@ -191,17 +197,56 @@ export function BlogCard({ blog, onClick }: Props) {
           </div>
         </div>
 
-        {/* Read more arrow */}
-        <span style={{
-          display: 'flex', alignItems: 'center', gap: 4,
-          fontSize: 'var(--text-xs)', fontWeight: 600,
-          color: 'var(--color-primary)',
-        }}>
-          Read
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          {/* Delete button */}
+          {onDelete && (
+            <button
+              onClick={handleDelete}
+              aria-label="Delete article"
+              title="Delete article"
+              style={{
+                width: 28, height: 28,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-border)',
+                background: 'transparent',
+                color: 'var(--color-text-faint)',
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)',
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'hsl(0, 80%, 96%)';
+                e.currentTarget.style.borderColor = 'hsl(0, 60%, 82%)';
+                e.currentTarget.style.color = 'hsl(0, 65%, 48%)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = 'var(--color-border)';
+                e.currentTarget.style.color = 'var(--color-text-faint)';
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 6V4h6v2" />
+              </svg>
+            </button>
+          )}
+
+          {/* Read more arrow */}
+          <span style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            fontSize: 'var(--text-xs)', fontWeight: 600,
+            color: 'var(--color-primary)',
+          }}>
+            Read
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
       </div>
     </article>
   );
