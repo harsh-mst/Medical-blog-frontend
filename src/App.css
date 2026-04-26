@@ -1,0 +1,114 @@
+/* App.css — only global overrides that don't belong in index.css */
+
+/* ── Remove old Vite boilerplate styles ── */
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ── Article prose content enhancements ── */
+.prose-body p {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.85;
+  color: var(--color-text);
+  margin-bottom: var(--space-5);
+}
+
+/* ── Focus ring for interactive cards ── */
+article[role="button"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* ── Smooth theme transitions ── */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+/* ── Disable transition on elements that need instant response ── */
+button, input, textarea, select, a {
+  transition-property: background-color, border-color, color, box-shadow, transform, opacity;
+  transition-duration: 150ms;
+}
+
+/* ── Custom checkbox styling (Safari compat) ── */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-surface);
+  cursor: pointer;
+  position: relative;
+  transition: all 150ms ease;
+}
+input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+input[type="checkbox"]:checked::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid white;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Mobile responsiveness ── */
+@media (max-width: 768px) {
+  /* Shrink hero padding on mobile */
+  :root {
+    --space-16: 48px;
+    --space-20: 60px;
+  }
+
+  /* Stack nav categories and hide overflow on mobile */
+  nav[aria-label="Blog categories"] button {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+
+  /* Make header compact on mobile */
+  header > div {
+    padding-inline: var(--space-4) !important;
+    gap: var(--space-3) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hide category nav on very small screens */
+  nav[aria-label="Blog categories"] {
+    display: none !important;
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
